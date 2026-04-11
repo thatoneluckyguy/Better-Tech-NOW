@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Register</h1>
+    <form action="">
+        <input required placeholder="Email" class="email" type="email">
+        <input  placeholder="Password" class="password" type="password">
+    </form>
+    <button onclick="register()" class="sumbitbtn">Sumbit</button>
+
+    <h1>login</h1>
+    <form action="">
+        <input required placeholder="Email" class="emailReg" type="email">
+        <input  placeholder="Password" class="passwordReg" type="password">
+    </form>
+    <button onclick="Login()" class="sumbitbtn">Sumbit</button>
+    <button class="logoutbtn" disabled onclick="logout()">Logout</button>
+    <button onclick="check()">click me!</button>
+    <section>
+        <div class="productsmain">
+
+        </div>
+    </section>
+    <script>
+        async function register() {
+            let Email = document.querySelector(".email").value
+            let Password = document.querySelector(".password").value
+
+            let responce = await fetch("https://localhost:7284/register",
+                {
+                    method: "Post",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({email: Email,password: Password})
+                }
+            )
+
+            const text = await responce.text();
+            localStorage.setItem("Isregistered", true)
+            document.querySelector(".logoutbtn").removeAttribute("disabled")
+            let data = null;
+            try {
+                data = JSON.parse(text);
+                
+            } catch {
+                console.log("Not JSON response");
+            }
+
+            console.log("PARSED:", data);
+
+        }
+
+        async function Login() {
+            let Email = document.querySelector(".emailReg").value
+            let Password = document.querySelector(".passwordReg").value
+
+            let responce = await fetch("https://localhost:7284/login",
+                {
+                    method: "Post",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({email: Email,password: Password})
+                }
+            )
+
+            const text = await responce.text();
+            localStorage.setItem("Isregistered", true)
+            document.querySelector(".logoutbtn").removeAttribute("disabled")
+            let data = null;
+            try {
+                data = JSON.parse(text);
+            } catch {
+                console.log("Not JSON response");
+            }
+
+            console.log("PARSED:", data);
+
+        }
+        function logout() {
+            registered = localStorage.setItem("Isregistered", false)
+            window.location.reload()
+        }
+
+        function check() {
+            if(localStorage.getItem("Isregistered") === "false"){
+                console.log("bad")
+            }else{
+                console.log("good")
+            }
+        }
+        
+    </script>
+</body>
+</html>
